@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Cardmarket Booster",
+  "description": "A booster for Carmarket!",
+  "version": "0.0",
+  "action": {
+    "default_popup": "cardmarket_booster.html",
+    "default_icon": "cardmarket_booster.png"
+  }
+}
