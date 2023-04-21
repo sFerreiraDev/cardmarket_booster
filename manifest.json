@@ -6,5 +6,15 @@
   "action": {
     "default_popup": "cardmarket_booster.html",
     "default_icon": "cardmarket_booster.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.cardmarket.com/*/Magic/Wants/*"
+      ],
+      "js": [
+        "./export.js"
+      ]
+    }
+  ]
 }
