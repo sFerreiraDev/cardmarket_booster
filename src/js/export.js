@@ -1,17 +1,16 @@
 CARD_XML_TEMPLATE = '<card number="%AMOUNT%" name="%NAME%">';
 DECK_XML_TEMPLATE = `<?xml version="1.0" encoding="UTF-8"?>
 <cockatrice_deck version="1">
-<deckname>"%DECK_NAME%"</deckname>
-<comments></comments>
-<zone="main">
+\t<deckname>"%DECK_NAME%"</deckname>
+\t<comments></comments>
+\t<zone="main">
 %DECK_CARDS%
-</zone>
-<zone="side"></zone>
+\t</zone>
+\t<zone="side"></zone>
 </cockatrice_deck>`;
 
 MODAL_CONTAINER_STYLE = `
   display: flex;
-  align-items: center;
   justify-content: center;
   position: absolute;
   top: 0;
@@ -24,6 +23,8 @@ MODAL_CONTAINER_STYLE = `
 `;
 
 MODAL_STYLE = `
+  position: sticky;
+  top: calc(50vh - 240px / 2);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,8 +37,16 @@ MODAL_STYLE = `
   border-radius: 3.75px;
 `;
 
+FIX_BUTTONS_STYLE = `
+  display: flex;
+  justify-content: space-between;
+  margin-left: 1rem;
+`;
+
 function createExportButton(click) {
-  const buttonList = document.querySelector('main.container div div.d-flex.align-items-center');
+  const buttonList = document.querySelector(
+    'main.container div div.d-flex.align-items-center'
+  );
   if (!buttonList) {
     return;
   }
@@ -47,14 +56,14 @@ function createExportButton(click) {
   button.classList.add('btn-outline-success');
   button.classList.add('ml-3');
   button.addEventListener('click', click);
-  
+
   const icon = document.createElement('span');
   icon.classList.add('fonticon-download');
   icon.classList.add('mr-2');
-  
+
   const span = document.createElement('span');
   span.innerHTML = 'Export Deck';
-  
+
   button.appendChild(icon);
   button.appendChild(span);
   buttonList.appendChild(button);
@@ -74,7 +83,9 @@ function createButton(text, clickCallback = null) {
 }
 
 function createCopyDeckButton() {
-  const buttonList = document.querySelector('main.container div div.d-flex.align-items-center');
+  const buttonList = document.querySelector(
+    'main.container div div.d-flex.align-items-center'
+  );
   if (!buttonList) {
     return;
   }
@@ -83,25 +94,31 @@ function createCopyDeckButton() {
   button.classList.add('btn');
   button.classList.add('btn-outline-success');
   button.classList.add('ml-3');
-  
+
   const icon = document.createElement('span');
   icon.classList.add('fonticon-clipboard');
 
-  button.addEventListener('click', () => copyDeckToClipboard(() => {
-    icon.classList.replace('fonticon-clipboard', 'fonticon-check-circle');
+  button.addEventListener('click', () =>
+    copyDeckToClipboard(() => {
+      icon.classList.replace('fonticon-clipboard', 'fonticon-check-circle');
 
-    setTimeout(() => {
-      icon.classList.replace('fonticon-check-circle', 'fonticon-clipboard');
-    }, 1000);
-  }));
+      setTimeout(() => {
+        icon.classList.replace('fonticon-check-circle', 'fonticon-clipboard');
+      }, 1000);
+    })
+  );
 
   button.appendChild(icon);
   buttonList.appendChild(button);
 }
 
 function copyDeckToClipboard(callback) {
-  const data = getCardList().map(item => `${item.amount} ${item.name}`).join('\n') || 'Invalid Data';
-  navigator.clipboard.writeText(data)
+  const data =
+    getCardList()
+      .map((item) => `${item.amount} ${item.name}`)
+      .join('\n') || 'Invalid Data';
+  navigator.clipboard
+    .writeText(data)
     .then(callback)
     .catch(() => console.warn('could not copy deck to clipboard'));
 }
@@ -127,7 +144,7 @@ function openModal() {
   const csvButton = createButton('Spreadsheet (.csv)', exportCsvFile);
   csvButton.style = 'width: 200px';
 
-  const xmlButton = createButton('cockatrice (.xml)', exportXmlFile);
+  const xmlButton = createButton('Cockatrice (.cod)', exportCockatriceFile);
   xmlButton.style = 'width: 200px';
 
   modal.appendChild(title);
@@ -138,7 +155,14 @@ function openModal() {
   modalContainer.appendChild(modal);
   document.querySelector('body').appendChild(modalContainer);
 
-  setTimeout(() => modalContainer.addEventListener('click', event => event.target === modalContainer && closeModal()), 0);
+  setTimeout(
+    () =>
+      modalContainer.addEventListener(
+        'click',
+        (event) => event.target === modalContainer && closeModal()
+      ),
+    0
+  );
 }
 
 function closeModal() {
@@ -147,63 +171,78 @@ function closeModal() {
 
 function getCardList() {
   const list = document.querySelector('#WantsListTable table tbody');
-  const data = Array.from(list.children).map(tr => ({
-    amount: tr.children[2].textContent.trim(), 
-    name: tr.children[3].textContent.trim()
+  const data = Array.from(list.children).map((tr) => ({
+    amount: tr.children[2].textContent.trim(),
+    name: tr.children[3].textContent.trim(),
   }));
 
   return data;
 }
 
-function getDeckName() {
-  const deckName = document.querySelector('.page-title-container h1').innerText;
-  return deckName;
-}
-
 const saveData = (function () {
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   return function (data, fileName) {
-    const blob = new Blob([data], {type: "octet/stream"}),
-          url = window.URL.createObjectURL(blob);
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    const blob = new Blob([data], { type: 'octet/stream' }),
+      url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
 
-      closeModal();
+    closeModal();
   };
-}());
+})();
 
 function exportTextFile() {
-  const data = getCardList().map(item => `${item.amount} ${item.name}`)
-    .join('\n') || 'Invalid Data';
+  const data =
+    getCardList()
+      .map((item) => `${item.amount} ${item.name}`)
+      .join('\n') || 'Invalid Data';
   const fileName = `${getDeckName()}.txt`;
   saveData(data, fileName);
 }
 
 function exportCsvFile() {
-  const data = getCardList().map(item => `${item.amount},${item.name}`)
-    .join('\n') || 'Invalid Data';
-  const fileName = `${getDeckName()}.csv`;
+  const data =
+    getCardList()
+      .map((item) => `${item.amount},${item.name}`)
+      .join('\n') || 'Invalid Data';
+  const fileName = `${getDeckName(document)}.csv`;
   saveData(data, fileName);
 }
 
-function exportXmlFile() {
+function exportCockatriceFile() {
   const data = getCardList() || [];
-  const fileName = `${getDeckName()}.xml`;
-  const tabIndent = '\t';
+  const fileName = `${getDeckName(document)}.cod`;
+  const tabIndent = '\t\t';
 
-  const xmlCards = data.map(card => 
-    tabIndent +
-    CARD_XML_TEMPLATE.replace('%AMOUNT%', card.amount)
-    .replace('%NAME%', card.name)
-  ).join('\n');
+  const xmlCards = data
+    .map(
+      (card) =>
+        tabIndent +
+        CARD_XML_TEMPLATE.replace('%AMOUNT%', card.amount).replace(
+          '%NAME%',
+          card.name
+        )
+    )
+    .join('\n');
 
-  const deck = DECK_XML_TEMPLATE.replace('%DECK_NAME%', getDeckName())
-    .replace('%DECK_CARDS%', xmlCards);
+  const deck = DECK_XML_TEMPLATE.replace(
+    '%DECK_NAME%',
+    getDeckName(document)
+  ).replace('%DECK_CARDS%', xmlCards);
 
   saveData(deck, fileName);
 }
 
+function fixButtonsTemplate() {
+  const buttonSellersWithMostCards = document.querySelector(
+    'main.container [href="#SellersWithMostCards"]'
+  );
+  const buttonsRightContainer = buttonSellersWithMostCards.parentElement;
+  buttonsRightContainer.style = FIX_BUTTONS_STYLE;
+}
+
 createExportButton(openModal);
 createCopyDeckButton();
+fixButtonsTemplate();

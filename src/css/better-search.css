@@ -1,0 +1,45 @@
+.booster-search-previewer {
+    position: sticky;
+    top: 0;
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
+    width: 50%;
+    vertical-align: top;
+    height: 100vh;
+}
+
+.booster-close-btn {
+    position: absolute;
+    top: 100px;
+    right: 25px;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*height: 30px;*/
+    /*width: 30px;*/
+    /*font-size: 18px;*/
+    /*font-weight: bold;*/
+    /*color: white;*/
+    /*background-color: #012169;*/
+    /*cursor: pointer;*/
+}
+
+.booster-hidden {
+    display: none;
+}
+
+.booster-search-previewer > iframe {
+    margin-top: -2px;
+    width: 100%;
+    height: 100%;
+}
+
+.booster-search-previewer > iframe header {
+    display: none;
+}
+
+main.booster-container {
+    width: 49.9%;
+    display: inline-block;
+}

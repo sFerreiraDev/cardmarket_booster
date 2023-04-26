@@ -1,20 +1,18 @@
 {
   "manifest_version": 3,
   "name": "Cardmarket Booster",
-  "description": "A booster for Carmarket!",
+  "description": "A booster for Cardmarket",
   "version": "0.0",
-  "action": {
-    "default_popup": "cardmarket_booster.html",
-    "default_icon": "cardmarket_booster.png"
-  },
   "content_scripts": [
     {
-      "matches": [
-        "https://www.cardmarket.com/*/Magic/Wants/*"
-      ],
+      "matches": ["*://www.cardmarket.com/*/Magic/Wants/*"],
+      "css": ["./src/css/better-search.css"],
       "js": [
-        "./export.js"
+        "./src/js/utils.js",
+        "./src/js/export.js",
+        "./src/js/better-search.js"
       ]
     }
-  ]
+  ],
+  "permissions": ["storage"]
 }
