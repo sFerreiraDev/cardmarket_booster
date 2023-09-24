@@ -1,8 +1,8 @@
 // STORAGE
-const STORAGE_PREFIX = 'cmbext_';
+const STORAGE_PREFIX = 'cardmarket-booster-ext';
 
 function getStorageKey(prefix, ...args) {
-  return [prefix, ...args].join('');
+  return [prefix, ...args].join('_');
 }
 
 function getData(key) {

@@ -49,6 +49,6 @@ main.booster-container {
     width: 50px;
     position: fixed;
     left: 8px;
-    bottom: 70px;
+    top: 50%;
     cursor: pointer;
 }
