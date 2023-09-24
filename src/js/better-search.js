@@ -125,6 +125,22 @@ function overrideCardLinkClickBehaviour(searchPreviewerElem) {
   });
 }
 
+function getBuyMeACoffee() {
+  const elem = document.createElement('div');
+  elem.onclick = () => {
+    window.open('https://www.buymeacoffee.com/sferreira','_newtab')
+  }
+  elem.classList.add('buy-me-a-coffee');
+  appendBuyMeACoffeeSvgToElem(elem);
+  return elem;
+}
+
+function appendBuyMeACoffee() {
+  const body = document.getElementsByTagName('body')[0];
+  const buyMeACoffeeElem = getBuyMeACoffee();
+  body.append(buyMeACoffeeElem);
+}
+
 // MAIN
 window.onload = function () {
   if (!isWantCardListPage(location.href) && !isWantEditCardPage(location.href))
@@ -134,6 +150,8 @@ window.onload = function () {
   const deckName = getDeckName(document);
   const maybeSessionUrl = getUrlFromStorage(userName, deckName);
   const searchPreviewerElem = addSearchPreviewerMainContainer(maybeSessionUrl);
+
+  appendBuyMeACoffee();
 
   if (isWantCardListPage(location.href)) {
     overrideSearchListClickBehaviour(searchPreviewerElem);

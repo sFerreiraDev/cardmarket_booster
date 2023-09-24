@@ -43,3 +43,12 @@ main.booster-container {
     width: 49.9%;
     display: inline-block;
 }
+
+.buy-me-a-coffee {
+    height: 50px;
+    width: 50px;
+    position: fixed;
+    left: 8px;
+    bottom: 70px;
+    cursor: pointer;
+}
